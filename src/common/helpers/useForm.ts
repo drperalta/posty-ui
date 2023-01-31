@@ -1,10 +1,7 @@
 import { FormInstance, FormItemRule } from "element-plus";
 import { Arrayable } from "element-plus/es/utils";
 import { reactive, ref } from "vue";
-
-type FormRules<T> = {
-  [key in keyof T]?: Arrayable<FormItemRule>;
-};
+import { FormRules } from "../interface/IForm";
 
 interface Props<T extends object> {
   defaultValues: T;

@@ -6,11 +6,11 @@ const router = createRouter({
   history: createWebHistory(),
 });
 
-// router.beforeEach(async (to, from) => {
-//   if (to.path === "/") {
-//     // redirect the user to the login page
-//     return { name: "Login" };
-//   }
-// });
+router.beforeEach(async (to, from) => {
+  if (to.path === "/") {
+    // redirect the user to the login page
+    return { name: "Login" };
+  }
+});
 
 export default router;
