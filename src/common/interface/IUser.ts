@@ -6,9 +6,8 @@ export interface IUser extends ICommonModel {
   first_name: string;
   last_name: string;
   full_name: string;
-  password: string;
 }
 
 export type IUserUpdatePayload = Partial<
-  Omit<IUser, "id" | "createdAt" | "updatedAt" | "password" | "full_name">
+  Omit<IUser, "id" | "createdAt" | "updatedAt" | "full_name">
 >;
