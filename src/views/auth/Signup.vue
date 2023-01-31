@@ -78,7 +78,7 @@ const submitForm = async (formInstance?: FormInstance) => {
   });
 };
 
-const onSignup = () => {
+const onLogin = () => {
   router.push({ name: "Login" });
 };
 </script>
@@ -148,7 +148,7 @@ const onSignup = () => {
         </ElFormItem>
       </ElForm>
 
-      <el-button link size="large" @click="onSignup"
+      <el-button link size="large" @click="onLogin"
         >Already have an account? Login</el-button
       >
     </div>
