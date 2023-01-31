@@ -19,7 +19,7 @@ import { ROUTES } from "@/common/constants/routes";
 
 const authStore = useAuthStore();
 
-const { form, formRef, formRules } = useForm<ISignupForm>({
+const { form, formRef, formRules, errors, setErrors } = useForm<ISignupForm>({
   defaultValues: {
     first_name: "",
     last_name: "",
@@ -30,10 +30,8 @@ const { form, formRef, formRules } = useForm<ISignupForm>({
   rules: SignupFormRules,
 });
 
-const formErrors = ref();
-
 const handleOnSignup = (payload: ISignupPayload) => {
-  formErrors.value = undefined;
+  setErrors(undefined);
 
   authStore.signupMutation(payload, {
     onSuccess(data) {
@@ -46,11 +44,12 @@ const handleOnSignup = (payload: ISignupPayload) => {
     },
     onError(error) {
       if (error instanceof AxiosError) {
-        const hasErrors = parseServerZodErrors(error.response?.data.errors);
+        const hasErrors = parseServerZodErrors<ISignupPayload>(
+          error.response?.data.errors
+        );
 
         if (hasErrors) {
-          console.log(hasErrors);
-          formErrors.value = hasErrors;
+          setErrors(hasErrors);
           return;
         }
 
@@ -92,7 +91,7 @@ const onLogin = () => {
       <ElForm ref="formRef" :model="form" :rules="formRules">
         <div class="grid grid-cols-2 gap-4">
           <!-- First Name -->
-          <ElFormItem prop="first_name" :error="formErrors?.first_name">
+          <ElFormItem prop="first_name" :error="errors?.first_name">
             <ElInput
               placeholder="First Name"
               v-model="form.first_name"
@@ -101,7 +100,7 @@ const onLogin = () => {
           </ElFormItem>
 
           <!-- Last Name -->
-          <ElFormItem prop="last_name" :error="formErrors?.last_name">
+          <ElFormItem prop="last_name" :error="errors?.last_name">
             <ElInput
               placeholder="Last Name"
               v-model="form.last_name"
@@ -111,12 +110,12 @@ const onLogin = () => {
         </div>
 
         <!-- Email -->
-        <ElFormItem prop="email" :error="formErrors?.email">
+        <ElFormItem prop="email" :error="errors?.email">
           <ElInput placeholder="Email" v-model="form.email" size="large" />
         </ElFormItem>
 
         <!-- Username -->
-        <ElFormItem prop="username" :error="formErrors?.username">
+        <ElFormItem prop="username" :error="errors?.username">
           <ElInput
             placeholder="Username"
             v-model="form.username"
@@ -125,7 +124,7 @@ const onLogin = () => {
         </ElFormItem>
 
         <!-- Password -->
-        <ElFormItem prop="password" :error="formErrors?.password">
+        <ElFormItem prop="password" :error="errors?.password">
           <ElInput
             placeholder="Password"
             v-model="form.password"

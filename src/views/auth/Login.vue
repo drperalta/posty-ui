@@ -8,8 +8,9 @@ import router from "@/common/router";
 import { useAuthStore } from "@/common/store/auth";
 import { AxiosError } from "axios";
 import { ROUTES } from "@/common/constants/routes";
+import { parseServerZodErrors } from "@/common/utils/parseServerZodErrors";
 
-const { form, formRef, formRules } = useForm<ILoginForm>({
+const { form, formRef, formRules, errors, setErrors } = useForm<ILoginForm>({
   defaultValues: {
     password: "",
     username: "",
@@ -20,22 +21,33 @@ const { form, formRef, formRules } = useForm<ILoginForm>({
 const authStore = useAuthStore();
 
 const handleOnLogin = (payload: ILoginPayload) => {
+  setErrors(undefined);
+
   authStore.loginMutation(payload, {
     onSuccess() {
       router.push(ROUTES.MAIN.FEED);
     },
     onError(error) {
-      let errMessage = "Something went wrong";
-
       if (error instanceof AxiosError) {
-        errMessage = error.response?.data.message;
-      }
+        const hasErrors = parseServerZodErrors<ILoginForm>(
+          error.response?.data.errors
+        );
 
-      ElNotification({
-        title: "Error",
-        message: errMessage,
-        type: "error",
-      });
+        if (hasErrors) {
+          console.log(hasErrors);
+          setErrors(hasErrors);
+          return;
+        }
+
+        ElNotification({
+          title: "Error",
+          message:
+            error.response?.data.message ||
+            error?.message ||
+            "Something went wrong",
+          type: "error",
+        });
+      }
     },
   });
 };
@@ -64,7 +76,7 @@ const onSignup = () => {
       <!-- Form -->
       <ElForm ref="formRef" :model="form" :rules="formRules">
         <!-- Username -->
-        <ElFormItem prop="username">
+        <ElFormItem prop="username" :error="errors?.username">
           <ElInput
             placeholder="Username"
             v-model="form.username"
@@ -73,12 +85,13 @@ const onSignup = () => {
         </ElFormItem>
 
         <!-- Password -->
-        <ElFormItem prop="password">
+        <ElFormItem prop="password" :error="errors?.password">
           <ElInput
             placeholder="Password"
             v-model="form.password"
             type="password"
             size="large"
+            show-password
           />
         </ElFormItem>
 
