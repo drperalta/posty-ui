@@ -14,6 +14,8 @@ const onLogout = () => {
 
 <template>
   <Navbar />
-  <el-button @click="onLogout">Logout</el-button>
-  <router-view></router-view>
+
+  <div class="h-[calc(100vh-60px)] w-screen">
+    <router-view></router-view>
+  </div>
 </template>

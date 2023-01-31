@@ -5,11 +5,14 @@ import { UserFilled } from "@element-plus/icons-vue";
 import router from "@/common/router";
 import { ROUTES } from "@/common/constants/routes";
 import Logo from "@/assets/posty-logo.svg";
+import { useUserStore } from "@/common/store/user";
 
 const authStore = useAuthStore();
-const isAuthenticated = computed(() => authStore.isAuthenticated);
+const userStore = useUserStore();
 
 const isSearch = ref<boolean>(false);
+
+const user = computed(() => userStore.data);
 
 const handleOnLogout = () => {
   authStore.logoutMutation();
@@ -37,7 +40,7 @@ const handleOnLogout = () => {
           <div
             class="flex items-center py-2 px-4 gap-2 hover:bg-gray-50 rounded-xl transition-all"
           >
-            <p class="font-medium">David Peralta</p>
+            <p class="font-medium">{{ user?.full_name }}</p>
             <el-avatar :icon="UserFilled" size="small" />
           </div>
           <template #dropdown>
