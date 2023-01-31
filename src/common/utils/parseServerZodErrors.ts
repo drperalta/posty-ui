@@ -1,9 +1,11 @@
 import { ServerZodError } from "../interface/IError";
 
-export const parseServerZodErrors = (errors?: ServerZodError[]) => {
+export function parseServerZodErrors<T extends object>(
+  errors?: ServerZodError[]
+) {
   if (!errors || errors.length <= 0) return undefined;
 
-  const errorsObj: { [key: string]: string } = {};
+  const errorsObj: { [key in keyof T]?: string } = {};
 
   errors.forEach((err) => {
     const key = err.path.join(".") as keyof typeof errorsObj;
@@ -11,4 +13,4 @@ export const parseServerZodErrors = (errors?: ServerZodError[]) => {
   });
 
   return errorsObj;
-};
+}
