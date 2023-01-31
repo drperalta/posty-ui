@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { toRaw } from "vue";
-import { FormInstance, ElForm, ElFormItem, ElInput } from "element-plus";
+import { FormInstance } from "element-plus";
 import { ILoginForm } from "@/common/interface/IAuth";
 import { useForm } from "@/common/helpers/useForm";
-import router from "@/common/router";
 import { LoginFormRules } from "@/common/rules/auth";
+import router from "@/common/router";
 
 const { form, formRef, formRules } = useForm<ILoginForm>({
   defaultValues: {
@@ -26,6 +26,7 @@ const submitForm = async (formInstance?: FormInstance) => {
     console.log("error", errorFields);
   });
 };
+
 const resetForm = (formInstance?: FormInstance) => {};
 
 const onSignup = () => {
@@ -35,44 +36,44 @@ const onSignup = () => {
 
 <template>
   <main class="flex justify-center items-center h-screen">
-    <div class="w-[360px] p-4 rounded-xl text-center">
+    <div class="w-[360px] p-2 rounded-xl text-center">
       <h1 class="text-3xl font-bold text-center mb-8">Login</h1>
 
       <!-- Form -->
-      <el-form ref="formRef" :model="form" :rules="formRules">
+      <ElForm ref="formRef" :model="form" :rules="formRules">
         <!-- Username -->
-        <el-form-item prop="username">
-          <el-input
+        <ElFormItem prop="username">
+          <ElInput
             placeholder="Username"
             v-model="form.username"
             size="large"
           />
-        </el-form-item>
+        </ElFormItem>
 
         <!-- Password -->
-        <el-form-item prop="password">
-          <el-input
+        <ElFormItem prop="password">
+          <ElInput
             placeholder="Password"
             v-model="form.password"
             type="password"
             size="large"
           />
-        </el-form-item>
+        </ElFormItem>
 
-        <el-form-item class="mt-6">
-          <el-button
+        <ElFormItem class="mt-6">
+          <ElButton
             class="w-full"
             type="primary"
             size="large"
             @click="submitForm(formRef)"
           >
             Login
-          </el-button>
-        </el-form-item>
-      </el-form>
+          </ElButton>
+        </ElFormItem>
+      </ElForm>
 
-      <el-button type="text" size="large" @click="onSignup"
-        >Don't have an account? Sign up</el-button
+      <ElButton link size="large" @click="onSignup"
+        >Don't have an account? Sign up</ElButton
       >
     </div>
   </main>

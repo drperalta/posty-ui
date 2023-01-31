@@ -21,4 +21,6 @@ app.use(router);
 app.use(pinia);
 app.use(ElementPlus);
 
+app.provide("router", router);
+
 app.mount("#app");

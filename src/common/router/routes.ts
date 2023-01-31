@@ -1,8 +1,6 @@
 import { RouteRecordRaw } from "vue-router";
 import { ROUTES } from "@/common/constants/routes";
-import { Auth } from "@/views";
-
-const { LoginPage, SignupPage } = Auth;
+import { LoginPage, SignupPage } from "@/views/auth";
 
 export const routes: RouteRecordRaw[] = [
   {

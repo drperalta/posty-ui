@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { toRaw } from "vue";
-import { FormInstance, ElForm, ElFormItem, ElInput } from "element-plus";
+import { FormInstance } from "element-plus";
 import { ISignupForm } from "@/common/interface/IAuth";
 import { useForm } from "@/common/helpers/useForm";
 import router from "@/common/router";
@@ -43,53 +43,53 @@ const onSignup = () => {
       <h1 class="text-3xl font-bold text-center mb-8">Sign in</h1>
 
       <!-- Form -->
-      <el-form ref="formRef" :model="form" :rules="formRules">
+      <ElForm ref="formRef" :model="form" :rules="formRules">
         <div class="grid grid-cols-2 gap-4">
           <!-- First Name -->
-          <el-form-item prop="first_name">
-            <el-input
+          <ElFormItem prop="first_name">
+            <ElInput
               placeholder="First Name"
               v-model="form.first_name"
               size="large"
             />
-          </el-form-item>
+          </ElFormItem>
 
           <!-- Last Name -->
-          <el-form-item prop="last_name">
-            <el-input
+          <ElFormItem prop="last_name">
+            <ElInput
               placeholder="Last Name"
               v-model="form.last_name"
               size="large"
             />
-          </el-form-item>
+          </ElFormItem>
         </div>
 
         <!-- Email -->
-        <el-form-item prop="email">
-          <el-input placeholder="Email" v-model="form.email" size="large" />
-        </el-form-item>
+        <ElFormItem prop="email">
+          <ElInput placeholder="Email" v-model="form.email" size="large" />
+        </ElFormItem>
 
         <!-- Username -->
-        <el-form-item prop="username">
-          <el-input
+        <ElFormItem prop="username">
+          <ElInput
             placeholder="Username"
             v-model="form.username"
             size="large"
           />
-        </el-form-item>
+        </ElFormItem>
 
         <!-- Password -->
-        <el-form-item prop="password">
-          <el-input
+        <ElFormItem prop="password">
+          <ElInput
             placeholder="Password"
             v-model="form.password"
             type="password"
             size="large"
             :show-password="true"
           />
-        </el-form-item>
+        </ElFormItem>
 
-        <el-form-item class="mt-6">
+        <ElFormItem class="mt-6">
           <el-button
             class="w-full"
             type="primary"
@@ -98,10 +98,10 @@ const onSignup = () => {
           >
             Submit
           </el-button>
-        </el-form-item>
-      </el-form>
+        </ElFormItem>
+      </ElForm>
 
-      <el-button type="text" size="large" @click="onSignup"
+      <el-button link size="large" @click="onSignup"
         >Already have an account? Login</el-button
       >
     </div>
