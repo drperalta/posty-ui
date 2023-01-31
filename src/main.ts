@@ -8,8 +8,12 @@ import "@/styles/tailwind.css";
 import "@/styles/index.scss";
 import ElementPlus from "element-plus";
 
+// Vue Router
+import router from "@/common/router";
+
 const app = createApp(App);
 
+app.use(router);
 app.use(ElementPlus);
 
 app.mount("#app");
