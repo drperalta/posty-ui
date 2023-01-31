@@ -10,7 +10,7 @@ const user = computed(() => userStore.data);
 
 <template>
   <div class="bg-white rounded-xl border border-gray-200 p-4 w-[200px]">
-    <div class="flex flex-col gap-3 items-center">
+    <div class="flex flex-col gap-3 items-center text-center">
       <!-- Avatar -->
       <el-avatar :icon="UserFilled" />
 
