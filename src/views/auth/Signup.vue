@@ -1,10 +1,23 @@
 <script setup lang="ts">
-import { toRaw } from "vue";
-import { FormInstance } from "element-plus";
-import { ISignupForm } from "@/common/interface/IAuth";
+import { ref, toRaw } from "vue";
+import {
+  ElButton,
+  ElForm,
+  ElFormItem,
+  ElInput,
+  ElNotification,
+  FormInstance,
+} from "element-plus";
+import { ISignupForm, ISignupPayload } from "@/common/interface/IAuth";
 import { useForm } from "@/common/helpers/useForm";
 import router from "@/common/router";
 import { SignupFormRules } from "@/common/rules/auth";
+import { useAuthStore } from "@/common/store/auth";
+import { AxiosError } from "axios";
+import { parseServerZodErrors } from "@/common/utils/parseServerZodErrors";
+import { ROUTES } from "@/common/constants/routes";
+
+const authStore = useAuthStore();
 
 const { form, formRef, formRules } = useForm<ISignupForm>({
   defaultValues: {
@@ -17,20 +30,53 @@ const { form, formRef, formRules } = useForm<ISignupForm>({
   rules: SignupFormRules,
 });
 
+const formErrors = ref();
+
+const handleOnSignup = (payload: ISignupPayload) => {
+  formErrors.value = undefined;
+
+  authStore.signupMutation(payload, {
+    onSuccess(data) {
+      ElNotification({
+        title: "Success",
+        message: `Hi, ${data.first_name} you can now login your account.`,
+        type: "success",
+      });
+      router.push(ROUTES.AUTH.LOGIN);
+    },
+    onError(error) {
+      if (error instanceof AxiosError) {
+        const hasErrors = parseServerZodErrors(error.response?.data.errors);
+
+        if (hasErrors) {
+          console.log(hasErrors);
+          formErrors.value = hasErrors;
+          return;
+        }
+
+        ElNotification({
+          title: "Error",
+          message:
+            error.response?.data.message ||
+            error?.message ||
+            "Something went wrong",
+          type: "error",
+        });
+      }
+    },
+  });
+};
+
 const submitForm = async (formInstance?: FormInstance) => {
   if (!formInstance) return;
 
   await formInstance.validate((valid, errorFields) => {
     if (valid) {
-      console.log("fields", toRaw(form));
+      handleOnSignup(toRaw(form));
       return;
     }
-
-    console.log("error", errorFields);
   });
 };
-
-const resetForm = (formInstance?: FormInstance) => {};
 
 const onSignup = () => {
   router.push({ name: "Login" });
@@ -46,7 +92,7 @@ const onSignup = () => {
       <ElForm ref="formRef" :model="form" :rules="formRules">
         <div class="grid grid-cols-2 gap-4">
           <!-- First Name -->
-          <ElFormItem prop="first_name">
+          <ElFormItem prop="first_name" :error="formErrors?.first_name">
             <ElInput
               placeholder="First Name"
               v-model="form.first_name"
@@ -55,7 +101,7 @@ const onSignup = () => {
           </ElFormItem>
 
           <!-- Last Name -->
-          <ElFormItem prop="last_name">
+          <ElFormItem prop="last_name" :error="formErrors?.last_name">
             <ElInput
               placeholder="Last Name"
               v-model="form.last_name"
@@ -65,12 +111,12 @@ const onSignup = () => {
         </div>
 
         <!-- Email -->
-        <ElFormItem prop="email">
+        <ElFormItem prop="email" :error="formErrors?.email">
           <ElInput placeholder="Email" v-model="form.email" size="large" />
         </ElFormItem>
 
         <!-- Username -->
-        <ElFormItem prop="username">
+        <ElFormItem prop="username" :error="formErrors?.username">
           <ElInput
             placeholder="Username"
             v-model="form.username"
@@ -79,7 +125,7 @@ const onSignup = () => {
         </ElFormItem>
 
         <!-- Password -->
-        <ElFormItem prop="password">
+        <ElFormItem prop="password" :error="formErrors?.password">
           <ElInput
             placeholder="Password"
             v-model="form.password"
@@ -89,6 +135,7 @@ const onSignup = () => {
           />
         </ElFormItem>
 
+        <!-- Submit Button -->
         <ElFormItem class="mt-6">
           <el-button
             class="w-full"

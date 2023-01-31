@@ -25,13 +25,17 @@ const handleOnLogin = (payload: ILoginPayload) => {
       router.push(ROUTES.MAIN.FEED);
     },
     onError(error) {
+      let errMessage = "Something went wrong";
+
       if (error instanceof AxiosError) {
-        ElNotification({
-          title: "Error",
-          message: error.response?.data.message,
-          type: "error",
-        });
+        errMessage = error.response?.data.message;
       }
+
+      ElNotification({
+        title: "Error",
+        message: errMessage,
+        type: "error",
+      });
     },
   });
 };

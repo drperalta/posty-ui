@@ -1,8 +1,14 @@
 import { defineStore } from "pinia";
-import { ILoginPayload, ISignupPayload } from "../interface/IAuth";
+import {
+  ILoginPayload,
+  ILoginResponse,
+  ISignupPayload,
+} from "../interface/IAuth";
 import { useAuthService } from "../service/auth";
 import { ref } from "vue";
 import { ICommonMutationCallbacks } from "../interface/ICommon";
+import { IUser } from "./../interface/IUser";
+import { AxiosError } from "axios";
 
 const { loginService, signupService } = useAuthService();
 
@@ -15,7 +21,7 @@ export const useAuthStore = defineStore("auth", () => {
 
   const loginMutation = async (
     payload: ILoginPayload,
-    callbacks?: ICommonMutationCallbacks
+    callbacks?: ICommonMutationCallbacks<ILoginResponse>
   ) => {
     try {
       const data = await loginService(payload);
@@ -30,7 +36,7 @@ export const useAuthStore = defineStore("auth", () => {
 
   const signupMutation = async (
     payload: ISignupPayload,
-    callbacks?: ICommonMutationCallbacks
+    callbacks?: ICommonMutationCallbacks<IUser>
   ) => {
     try {
       const data = await signupService(payload);
