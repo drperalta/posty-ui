@@ -1,6 +1,13 @@
+import { IUser } from "./IUser";
+
 export interface ILoginForm {
   username: string;
   password: string;
+}
+
+export type ILoginPayload = ILoginForm;
+export interface ILoginResponse {
+  token: string;
 }
 
 export interface ISignupForm {
@@ -10,3 +17,6 @@ export interface ISignupForm {
   username: string;
   password: string;
 }
+
+export type ISignupPayload = ISignupForm;
+export type ISignupResponse = IUser;

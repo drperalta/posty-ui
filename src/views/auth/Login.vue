@@ -1,10 +1,13 @@
 <script setup lang="ts">
 import { toRaw } from "vue";
-import { FormInstance } from "element-plus";
-import { ILoginForm } from "@/common/interface/IAuth";
+import { ElNotification, FormInstance } from "element-plus";
+import { ILoginForm, ILoginPayload } from "@/common/interface/IAuth";
 import { useForm } from "@/common/helpers/useForm";
 import { LoginFormRules } from "@/common/rules/auth";
 import router from "@/common/router";
+import { useAuthStore } from "@/common/store/auth";
+import { AxiosError } from "axios";
+import { ROUTES } from "@/common/constants/routes";
 
 const { form, formRef, formRules } = useForm<ILoginForm>({
   defaultValues: {
@@ -14,20 +17,35 @@ const { form, formRef, formRules } = useForm<ILoginForm>({
   rules: LoginFormRules,
 });
 
+const authStore = useAuthStore();
+
+const handleOnLogin = (payload: ILoginPayload) => {
+  authStore.loginMutation(payload, {
+    onSuccess() {
+      router.push(ROUTES.MAIN.FEED);
+    },
+    onError(error) {
+      if (error instanceof AxiosError) {
+        ElNotification({
+          title: "Error",
+          message: error.response?.data.message,
+          type: "error",
+        });
+      }
+    },
+  });
+};
+
 const submitForm = async (formInstance?: FormInstance) => {
   if (!formInstance) return;
 
   await formInstance.validate((valid, errorFields) => {
     if (valid) {
-      console.log("fields", toRaw(form));
+      handleOnLogin(toRaw(form));
       return;
     }
-
-    console.log("error", errorFields);
   });
 };
-
-const resetForm = (formInstance?: FormInstance) => {};
 
 const onSignup = () => {
   router.push({ name: "Signup" });
