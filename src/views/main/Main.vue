@@ -2,6 +2,7 @@
 import { ROUTES } from "@/common/constants/routes";
 import router from "@/common/router";
 import { useAuthStore } from "@/common/store/auth";
+import Navbar from "@/components/Navbar.vue";
 
 const authStore = useAuthStore();
 
@@ -12,7 +13,9 @@ const onLogout = () => {
 </script>
 
 <template>
-  <h1>Main</h1>
-  <el-button @click="onLogout">Logout</el-button>
-  <router-view></router-view>
+  <Navbar />
+
+  <div class="h-[calc(100vh-60px)] w-screen">
+    <router-view></router-view>
+  </div>
 </template>

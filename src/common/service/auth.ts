@@ -8,6 +8,11 @@ import {
 import { axios } from "../utils/axios";
 
 export const useAuthService = () => {
+  /**
+   * Login user
+   * @param payload user credentials
+   * @returns access token
+   */
   const loginService = async (
     payload?: ILoginPayload
   ): Promise<ILoginResponse> => {
@@ -16,6 +21,11 @@ export const useAuthService = () => {
     return response.data;
   };
 
+  /**
+   * Sign up user
+   * @param payload user details
+   * @returns created user details
+   */
   const signupService = async (
     payload?: ISignupPayload
   ): Promise<ISignupResponse> => {

@@ -9,6 +9,7 @@ import { useAuthStore } from "@/common/store/auth";
 import { AxiosError } from "axios";
 import { ROUTES } from "@/common/constants/routes";
 import { parseServerZodErrors } from "@/common/utils/parseServerZodErrors";
+import { useUserStore } from "@/common/store/user";
 
 const { form, formRef, formRules, errors, setErrors } = useForm<ILoginForm>({
   defaultValues: {
@@ -19,12 +20,14 @@ const { form, formRef, formRules, errors, setErrors } = useForm<ILoginForm>({
 });
 
 const authStore = useAuthStore();
+const userStore = useUserStore();
 
 const handleOnLogin = (payload: ILoginPayload) => {
   setErrors(undefined);
 
   authStore.loginMutation(payload, {
     onSuccess() {
+      userStore.getUserDetails();
       router.push(ROUTES.MAIN.FEED);
     },
     onError(error) {

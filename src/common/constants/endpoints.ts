@@ -4,7 +4,9 @@ export const ENDPOINTS = {
     SIGNUP: "/auth/register",
   },
   USER: {
-    GET: "/user/me",
-    UPDATE: "/user",
+    ME: "/users/me",
+    SEARCH: "/users/search",
+    GET: "/users",
+    UPDATE: "/users",
   },
 };

@@ -5,19 +5,15 @@ import {
   ISignupPayload,
 } from "../interface/IAuth";
 import { useAuthService } from "../service/auth";
-import { ref } from "vue";
+import { computed, ref } from "vue";
 import { ICommonMutationCallbacks } from "../interface/ICommon";
 import { IUser } from "./../interface/IUser";
-import { AxiosError } from "axios";
 
 const { loginService, signupService } = useAuthService();
 
-interface AuthState {
-  token?: string;
-}
-
 export const useAuthStore = defineStore("auth", () => {
   const token = ref<string | null>(null);
+  const isAuthenticated = computed(() => !!token.value);
 
   const loginMutation = async (
     payload: ILoginPayload,
@@ -54,6 +50,7 @@ export const useAuthStore = defineStore("auth", () => {
 
   return {
     token,
+    isAuthenticated,
     loginMutation,
     signupMutation,
     logoutMutation,
